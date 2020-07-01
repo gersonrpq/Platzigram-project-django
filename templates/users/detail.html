@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block head_content %}
+<title>@{{ user.username }} | Platzigram</title>
+{% endblock %}
+
+{% block container %}
+
+    <div class="container mb-5" style="margin-top: 8em;">
+        <div class="row">
+            <div class="col-sm-4 d-flex justify-content-center">
+                <img src="{{ user.profile.picture.url }}" alt="@{{ user.username}}" class="rounded-circle" width="150px" />
+            </div>
+            <div class="col-sm-8">
+                <h2 style="font-weight: 100;">
+                    {{ user.username }}
+                    {% if user == request.user %}
+                        <a
+                            href="{% url "users:update_profile" %}"
+                            class="ml-5 btn btn-sm btn-outline-info"
+                        >
+                            Edit profile
+                        </a>
+                    {% else %}
+                        {% if user.profile in followings  %}
+                            <a href="{% url "users:follow" user.username %}"
+                                class="ml-5 btn btn-sm btn-primary btn-outline-info">
+                                Following
+                            </a>
+                        {% else %}
+                            <a href="{% url "users:follow" user.username %}"
+                                class="ml-5 btn btn-sm btn-primary">
+                                Follow
+                            </a>   
+                        {% endif %}
+                    {% endif %}
+                </h2>
+                <div class="row mt-2" style="font-size: 1.2em">
+                    <div class="col-sm-4">
+                        {% if posts.count > 0 %}
+                            <b>{{ posts.count }}</b> posts
+                        {% else %}
+                            <b>0</b> posts                            
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-4">
+                        {% if user.profile.followers.count > 0 %}
+                            <b>{{ user.profile.followers.count }}</b> followers
+                        {% else %}
+                            <b>0</b> followers                           
+                        {% endif %}
+                    </div>
+                    <div class="col-sm-4">
+                        {% if user.profile.followings.count > 0 %}
+                            <b>{{ user.profile.followings.count }}</b> following
+                        {% else %}
+                            <b>0</b> following                           
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-sm-12">
+                        <p>{{ user.profile.biography }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+    
+    <div class="container" id="user-posts">
+        <div class="row mt-3">
+            {% for post in posts %}
+            <div class="col-sm-4 pb-5 pr-5 pl-5 d-flex justify-content-center align-items-center">
+                <a href="{% url "posts:post_detail" post.pk %}" class="border">
+                    <img src="{{ post.photo.url}}" alt="{{ post.title}}" class="img-fluid">
+                </a>
+            </div>
+          {% endfor %}
+
+        </div>
+    </div>
+
+{% endblock %}
