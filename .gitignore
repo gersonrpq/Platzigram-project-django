@@ -5,11 +5,9 @@ __pycache__/
 django_app/*
 
 # Media
-media/*
 media/
 pictures/
-*.jpg
-*.png
+
 photos/
 
 # coding
